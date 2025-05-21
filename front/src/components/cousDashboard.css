@@ -1,0 +1,104 @@
+.cours-dashboard {
+    height: 100vh;
+    padding: 24px 48px;
+    font-family: "Inter";
+
+    .fil-aria {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 48px;
+        font-size: 14px;
+    }
+
+    .date {
+        background-color: #7dddf5;
+        padding: 16px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .search {
+            display: flex;
+            align-items: center;
+            border: 1px solid #707070;
+            border-radius: 8px;
+            padding: 0 0 0 12px;
+            background-color: white;
+            gap: 8px;
+
+            &:focus-within {
+                outline: 2px solid black;
+            }
+
+            input {
+                background-color: transparent;
+                border: none;
+                outline: none;
+                height: 28px;
+                width: 482px;
+            }
+        }
+    }
+
+    .content {
+        display: flex;
+        gap: 12px;
+        padding: 24px 0;
+
+        .taux-change {
+            border-radius: 8px;
+            width: 60%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            p {
+                padding: 0 20px;
+                font-weight: 600;
+            }
+
+            .table-change {
+                display: flex;
+                flex-direction: column;
+                padding: 8px 20px;
+
+                .table-head, .table-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .head-item {
+                        font-weight:600;
+                    }
+                }
+
+                .table-head {
+                    padding: 4px 0 12px 0;
+                }
+
+                .table-row {
+                    padding: 12px 0;
+                    border-bottom: 1px solid #707070;
+                }
+            }
+
+            .last {
+                padding: 8px 20px;
+                background-color: #b7b7b7;
+                border-radius: 8px;
+                margin-top: 64px;
+            }
+        }
+
+        .info {
+            background-color: blueviolet;
+            border-radius: 8px;
+            width: 40%;
+            height: 100%;
+        }
+    }
+}

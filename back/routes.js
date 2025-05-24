@@ -4,7 +4,7 @@ const router = express.Router();
 const taux = require('./controllers/globalTaux');
 router.get('/taux', taux.getAllRates);
 router.get('/taux/historique/:dev_source/:dev_cible', taux.getRateHistory);
-router.get('/taux/recherche/:dev_source/:dev_cible', taux.searchExchangeRate);
+router.get('/taux/recherche/:dev_cible', taux.searchExchangeRate);
 router.get('/taux/historique/jour/:date', taux.getDailyRateHistory);
 
 // Routes pour la mise à jour des taux

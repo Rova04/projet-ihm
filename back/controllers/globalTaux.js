@@ -38,54 +38,59 @@ const getRateHistory = async (req, res) => {
  * Cette fonction est appelée quand un utilisateur recherche un taux
  */
 const searchExchangeRate = async (req, res) => {
-  const { dev_source, dev_cible } = req.params;
-  const marge = 0.02; // 2% de marge par défaut
-  
+  console.log('API externe bien appellé');
+  const dev_source = 'Ariary'; // Toujours fixe
+  const { dev_cible } = req.params;
+  const marge = 0.02; // Marge de 2%
+
   try {
-    // Vérifier si le taux existe déjà dans la base
+    // Vérifier si le taux existe déjà
     const [existingRate] = await db.query(
       'SELECT * FROM taux WHERE dev_source = ? AND dev_cible = ?',
       [dev_source, dev_cible]
     );
-    
-    // Si le taux existe, le retourner directement
+
     if (existingRate.length > 0) {
       return res.json(existingRate[0]);
     }
-    
-    // Sinon, récupérer le taux depuis l'API externe
+
+    console.log(dev_cible)    // Requête vers l'API : combien vaut 1 dev_cible en MGA
     const response = await axios.get('https://api.exchangerate.host/latest', {
-      params: { 
-        base: dev_source,
-        symbols: dev_cible
+      params: {
+        base: dev_cible,
+        symbols: 'MGA'
       }
     });
-    
-    if (!response.data || !response.data.rates || !response.data.rates[dev_cible]) {
-      return res.status(404).json({ error: 'Taux de change non disponible.' });
+    console.log('API externe bien exécutée');
+    const rateMGA = response.data?.rates?.MGA;
+
+    if (!rateMGA) {
+      return res.status(404).json({ error: 'Taux de change non disponible pour cette devise.' });
     }
-    
-    const taux_achat = response.data.rates[dev_cible];
+
+    // Ici, 1 dev_cible = rateMGA Ariary → c'est ce qu'on veut
+    const taux_achat = rateMGA;
     const taux_vente = taux_achat * (1 + marge);
-    
-    // Insérer le nouveau taux dans la base
+
+    // Enregistrement dans la base
     await db.query(
       'INSERT INTO taux (taux_achat, taux_vente, dev_source, dev_cible) VALUES (?, ?, ?, ?)',
       [taux_achat, taux_vente, dev_source, dev_cible]
     );
-    
-    // Récupérer le taux avec son ID pour le retourner
+
+    // Retourner ce qu'on vient d'insérer
     const [newRate] = await db.query(
       'SELECT * FROM taux WHERE dev_source = ? AND dev_cible = ?',
       [dev_source, dev_cible]
     );
-    
+
     res.json(newRate[0]);
   } catch (err) {
     console.error('Erreur lors de la recherche du taux:', err);
     res.status(500).json({ error: 'Erreur lors de la recherche du taux de change.' });
   }
 };
+
 
 //Mise à jour automatique ne prenant en charge les taux modifiés en moins de 48h
 const updateExchangeRates = async (options = {}) => {
@@ -109,11 +114,11 @@ const updateExchangeRates = async (options = {}) => {
 
     for (const { dev_source, dev_cible } of existingPairs) {
       try {
+        // Vérification et filtrage manuel
         const [currentRate] = await db.query(
           'SELECT * FROM taux WHERE dev_source = ? AND dev_cible = ?',
           [dev_source, dev_cible]
         );
-
         if (currentRate.length === 0) continue;
 
         if (respectManualUpdates) {
@@ -139,27 +144,34 @@ const updateExchangeRates = async (options = {}) => {
           }
         }
 
+        // Récupération du taux depuis l'API (1 dev_cible = ? MGA)
         const response = await axios.get('https://api.exchangerate.host/latest', {
-          params: { base: dev_source, symbols: dev_cible }
+          params: { base: dev_cible, symbols: 'MGA' }
         });
 
-        const taux_achat = response.data?.rates?.[dev_cible];
-        if (!taux_achat) {
-          if (logToConsole) console.log(`Aucun taux trouvé pour ${dev_source}/${dev_cible}`);
+        const rateMGA = response.data?.rates?.MGA;
+        if (!rateMGA || rateMGA <= 0) {
+          if (logToConsole) console.log(`Taux MGA introuvable pour ${dev_cible}`);
           continue;
         }
 
-        const marge = (currentRate[0].taux_vente / currentRate[0].taux_achat) - 1;
-        const taux_vente = taux_achat * (1 + marge);
+        // Conversion inversée : 1 MGA = ? dev_cible
+        const newTauxAchat = 1 / rateMGA;
 
+        // Calculer la même marge qu’actuellement
+        const marge = (currentRate[0].taux_vente / currentRate[0].taux_achat) - 1;
+        const newTauxVente = newTauxAchat * (1 + marge);
+
+        // Archiver l'ancien taux
         await db.query(
           'INSERT INTO historique_taux (taux_achat, taux_vente, dev_source, dev_cible, date_archivage, modification_manuelle) VALUES (?, ?, ?, ?, ?, 0)',
           [currentRate[0].taux_achat, currentRate[0].taux_vente, dev_source, dev_cible, dateUpdate]
         );
 
+        // Mise à jour dans la table principale
         await db.query(
           'UPDATE taux SET taux_achat = ?, taux_vente = ? WHERE dev_source = ? AND dev_cible = ?',
-          [taux_achat, taux_vente, dev_source, dev_cible]
+          [newTauxAchat, newTauxVente, dev_source, dev_cible]
         );
 
         updatedCount++;
@@ -182,6 +194,7 @@ const updateExchangeRates = async (options = {}) => {
     throw new Error(errorMsg);
   }
 };
+
 
 //réactiver la mise à jour automatique pour une ligne historique
 const resetManualOverride = async (req, res) => {

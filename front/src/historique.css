@@ -1,0 +1,285 @@
+.historique-taux {
+    height: 100vh;
+    padding: 24px 48px;
+    font-family: "Inter";
+
+    .fil-aria {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 48px;
+        font-size: 14px;
+    }
+
+    .ambony {
+        background-color: white;
+        padding: 10px 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        max-width: 700px;
+        justify-content: start;
+
+        h3 {
+            font-family: inter;
+            margin: 0 0 2px 0;
+            color: #1f2937;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        
+    }
+
+    .menu {
+        background-color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .real-search {
+                background-color: #b7b7b7;
+                padding: 5px 8px;
+                border-radius: 10px;
+                font-weight: 600;
+                width: 500px;
+                align-items: center;
+        
+                &:focus-within {
+                    outline: 2px solid black;
+                }
+        
+            input {
+                background-color: transparent;
+                border: none;
+                outline: none;
+                height: 28px;
+                width: 650px;
+            }
+        }
+
+        .mini-menu {
+            background-color: white;
+            padding: 7px 12px;
+            min-width: 600px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+
+            h5 {
+                padding: 10px 5px;
+                font-family: inter;
+                margin: 0 0 2px 0;
+                color: #1f2937;
+                font-weight: 700;
+                text-align: center;
+                letter-spacing: 0.5px;
+            }
+
+            .date {
+                background-color: #a5c9ee;
+                padding: 5px 8px;
+                min-width: 180px;
+                max-width: 200px;
+                width: auto;
+                border-radius: 8px;
+                border: 1px solid #d1d5db;
+                display: flex;
+                align-items: center;
+
+                input[type="date"] {
+                    background-color: transparent;
+                    border: none;
+                    outline: none;
+                    font-family: inherit;
+                    font-size: 14px;
+                    color: #374151;
+                    width: 90%;
+                    padding: 4px 6px;
+                    cursor: pointer;
+
+                    &::-webkit-calendar-picker-indicator {
+                        filter: invert(0.4);
+                        cursor: pointer;    
+                        margin-left: 4px;
+                    }
+                }
+
+                &:hover {
+                    border-color: #3b82f6;               
+                }
+
+                &:focus-within {
+                    border-color: #3b82f6;
+                    background-color: #dbeafe;               
+                }
+            }
+
+            button {
+                cursor: pointer;
+
+                label {
+                    cursor: pointer;
+                }
+            }
+
+            .filtre-wrapper {
+                .filtre-select-container {
+                    position: relative;
+                    display: inline-block;
+                
+                    .filtre-select {
+                        background-color: #e0e7ff;
+                        padding: 6px 32px 6px 12px;                            
+                        height: 40px;
+                        border-radius: 8px;
+                        border: 1px solid #c7d2fe;
+                        font-size: 14px;
+                        color: #1e3a8a;
+                        cursor: pointer;
+                        width: auto;
+                        max-width: 150px;
+                        appearance: none;
+            
+                        &:focus {
+                            outline: none;
+                            border-color: #3b82f6;
+                            background-color: #dbeafe;
+                        }
+                    }
+                
+                    .filtre-icon {
+                        position: absolute;
+                        right: 10px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        pointer-events: none;
+                        color: #1e3a8a;
+                    } 
+                }
+            }
+
+            .search-button {
+                background-color: #b7b7b7;
+                border: 1px solid #7f828f;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 8px;
+                padding: 6px 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: #1e3a8a;      
+                
+                &:focus {
+                    background-color: #999999;    
+                    border: 1px solid #585b63;             
+                }
+            }
+
+            .pdf {
+                background-color: #fee2e2;
+                padding: 5px 8px;
+                border-radius: 8px;
+                border: 1px solid #fecaca;;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 14px;
+                color: #b91c1c;
+                cursor: pointer;
+
+                &:focus {
+                    outline: none;
+                    border-color: #ef4444;
+                    background-color: #ffe4e6;               
+                }
+            }
+
+            .excel {
+                background-color: #d1fae5;
+                padding: 5px 8px;
+                border-radius: 8px;
+                border: 1px solid #a7f3d0;;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 14px;
+                color: #047857;
+                cursor: pointer;
+
+                &:focus {
+                    outline: none;
+                    border-color: #10b981;
+                    background-color: #dcfce7; 
+                }
+            }
+        }
+    }
+
+    .tableau {
+        padding: 24px 0;
+        display: flex;
+        justify-content: center;
+        background-color: white;
+
+        .table-change {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: white;
+            overflow: hidden;    
+            
+            .titre{
+                background-color: #1f2937;
+                color: #ffffff;
+                font-weight: 600;
+                font-size: 14px;
+                letter-spacing: 0.3px;
+                padding: 12px 16px;
+                /* text-transform: uppercase; */
+                border-bottom: 2px solid #e5e7eb;
+            }
+
+            th, td {
+                padding: 12px 20px;
+                text-align: center;
+                border-bottom: 1px solid #1f2937;
+            }
+
+            th {
+                font-weight: 600;
+                background-color: #f0f0f0;                 
+            }
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            color: #666;
+        }
+
+        .action-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-1px);
+        }
+
+        .delete-btn {
+            border-color: #dc3545;
+            color: #dc3545;
+
+            &:hover {
+                background: #dc3545;
+                color: white;
+            }
+        }
+    }
+}
